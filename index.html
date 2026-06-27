@@ -276,6 +276,46 @@
             }, duration * 1000);
         }
 
+        // Fungsi Navigasi Halaman Utama + Manajemen Audio Otomatis
+function navigateTo(pageId) {
+    // Sembunyikan semua halaman aktif
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(page => page.classList.remove('active'));
+    
+    // Tampilkan halaman tujuan
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+
+    // Atur Alur Audio berdasarkan halaman
+    stopAllAudio();
+    
+    const currentTrack = audioTracks[pageId];
+    if (currentTrack) {
+        // CONTOH: Jika masuk ke halaman Letter, mulai dari menit ke 1:30 (90 detik)
+        if (pageId === 'page-letter') {
+            currentTrack.currentTime = 90; // <-- Ganti angka ini dengan detik yang kamu mau (dalam satuan sekon)
+            
+            // Logika custom loop: Saat lagu habis, set kembali ke 0 (awal lagu) dan putar lagi
+            currentTrack.onended = function() {
+                currentTrack.currentTime = 0; 
+                currentTrack.play();
+            };
+        } else {
+            // Untuk halaman lain yang tidak pakai custom start, pasang loop normal jika di-play
+            currentTrack.onended = function() {
+                currentTrack.currentTime = 0;
+                currentTrack.play();
+            };
+        }
+
+        currentTrack.play().catch(err => {
+            console.log("Interaksi awal dibutuhkan browser sebelum memutar musik.");
+        });
+    }
+}
+
         // Interval dipersingkat menjadi 80ms agar jatuhnya melimpah (gacor)
         setInterval(createEmoji, 80);
     </script>
