@@ -29,8 +29,16 @@
             z-index: 10;
         }
         @keyframes fall {
-            to {
-                transform: translateY(105vh) rotate(360deg);
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(720deg);
+                opacity: 0;
             }
         }
         /* Efek Transisi Halaman */
@@ -49,17 +57,29 @@
 </head>
 <body class="relative min-h-screen flex items-center justify-center p-4 selection:bg-pink-200">
 
-    <!-- Efek Background Hujan Emoji -->
+    <!-- Efek Background Hujan Emoji Super Gacor -->
     <div id="emoji-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
-    <!-- Audio Elemen untuk Backsong (Ganti link audio di bawah ini) -->
-    <audio id="backsong" loop>
+    <!-- ELEMEN AUDIO (Masing-masing halaman punya backsong sendiri) -->
+    <!-- 1. Musik Utama / Opener -->
+    <audio id="bg-main" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Browser kamu tidak mendukung audio otomatis.
+    </audio>
+    <!-- 2. Musik untuk Halaman Letter -->
+    <audio id="bg-letter" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+    <!-- 3. Musik untuk Halaman Gifts (Prank) -->
+    <audio id="bg-gifts" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+    </audio>
+    <!-- 4. Musik untuk Halaman Photos -->
+    <audio id="bg-photo" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- CONTAINER UTAMA (Bentuk Buku/Card Aesthetic) -->
-    <div class="w-full max-w-md bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border-4 border-pink-200 p-6 relative z-20 min-h-[500px] flex flex-col justify-between">
+    <!-- CONTAINER UTAMA -->
+    <div class="w-full max-w-md bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border-4 border-pink-200 p-6 relative z-20 min-h-[520px] flex flex-col justify-between">
         
         <!-- ================= PAGE 1: OPENER ================= -->
         <div id="page-opener" class="page active flex-col items-center text-center my-auto space-y-6">
@@ -68,7 +88,7 @@
             <p class="text-gray-600 text-sm leading-relaxed">
                 Hari ini ada yang spesial nih! Buka buku digital ini sampai akhir yaa, ada sesuatu di dalam sini buat kamu. 💕
             </p>
-            <button onclick="changePage('page-menu'); playAudio();" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 duration-200 cursor-pointer font-cute">
+            <button onclick="navigateTo('page-menu')" class="bg-pink-400 hover:bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 duration-200 cursor-pointer font-cute">
                 Buka Buku 📖 →
             </button>
         </div>
@@ -78,34 +98,34 @@
             <h2 class="text-2xl font-cute text-pink-500 font-bold">Pilih Kado Kamu 🎁</h2>
             <p class="text-gray-500 text-xs -mt-4">Silahkan diklik simbol-simbol di bawah ini ya!</p>
             
-            <div class="grid grid-cols-3 gap-4 w-full px-2">
+            <div class="grid grid-cols-2 gap-4 w-full px-2">
                 <!-- Tombol Surat -->
-                <button onclick="changePage('page-letter')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
+                <button onclick="navigateTo('page-letter')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
                     <span class="text-4xl mb-2">✉️</span>
                     <span class="text-xs font-bold text-pink-600">Letter</span>
                 </button>
                 <!-- Tombol Hadiah -->
-                <button onclick="changePage('page-gifts')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
+                <button onclick="navigateTo('page-gifts')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
                     <span class="text-4xl mb-2">🎁</span>
                     <span class="text-xs font-bold text-pink-600">Gifts</span>
                 </button>
                 <!-- Tombol Foto -->
-                <button onclick="changePage('page-photo')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
+                <button onclick="navigateTo('page-photo')" class="flex flex-col items-center p-4 bg-pink-50 rounded-2xl border-2 border-pink-100 hover:border-pink-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
                     <span class="text-4xl mb-2">📸</span>
                     <span class="text-xs font-bold text-pink-600">Photos</span>
                 </button>
+                <!-- Tombol Selesai (Direct WA) -->
+                <button onclick="redirectToWA()" class="flex flex-col items-center p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-100 hover:border-emerald-300 transition-all transform hover:scale-105 cursor-pointer shadow-sm">
+                    <span class="text-4xl mb-2">🏁</span>
+                    <span class="text-xs font-bold text-emerald-600">Selesai</span>
+                </button>
             </div>
-
-            <!-- Kontrol Musik (Bisa diganti atau di-pause di sini) -->
-            <div class="pt-4 border-t border-pink-100 w-full flex items-center justify-center space-x-2 text-xs text-gray-400">
-                <span>🎵 Backsong Status:</span>
-                <button onclick="toggleAudio()" id="audio-control-btn" class="text-pink-500 font-bold underline cursor-pointer">Playing</button>
-            </div>
+            
+            <p class="text-[10px] text-gray-400 italic">Musik otomatis terjeda di halaman menu utama ini.</p>
         </div>
 
         <!-- ================= SUB-PAGE: LETTER ================= -->
         <div id="page-letter" class="page flex-col items-center text-center my-auto space-y-4 w-full">
-            <!-- Desain Amplop/Cover Surat Cinta -->
             <div class="w-full bg-amber-50/60 border-2 border-dashed border-pink-300 rounded-2xl p-5 text-left relative shadow-inner">
                 <div class="absolute top-2 right-3 text-2xl text-pink-400 opacity-70">💌</div>
                 <h3 class="font-cute text-pink-500 font-bold text-lg mb-3 border-b border-pink-200 pb-1">Dear Sayang,</h3>
@@ -116,14 +136,14 @@
                     <p class="text-right font-cute text-pink-400 mt-4">- From Someone Who Cares ✨</p>
                 </div>
             </div>
-            <button onclick="changePage('page-menu')" class="mt-4 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
+            <button onclick="navigateTo('page-menu')" class="mt-4 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
                 ← Kembali ke Menu Simbol
             </button>
         </div>
 
         <!-- ================= SUB-PAGE: GIFTS (PRANK) ================= -->
         <div id="page-gifts" class="page flex-col items-center text-center my-auto space-y-5 w-full">
-            <div class="text-6xl animate-wobble">🤪😜</div>
+            <div class="text-6xl animate-bounce">🤪😜</div>
             <div class="space-y-2">
                 <h3 class="text-3xl font-cute text-pink-500 font-bold tracking-wider">KEPOOOO WKWKWKWK</h3>
                 <p class="text-gray-500 text-sm italic">Bercanda yaaa... 🤭</p>
@@ -131,7 +151,7 @@
             <div class="bg-pink-50 border border-pink-100 rounded-xl p-4 text-sm text-gray-600">
                 Hadiahnya lagii akuu proses kok ini, ditunggu dengan sabar ya orang baik! 🤫✨
             </div>
-            <button onclick="changePage('page-menu')" class="mt-4 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
+            <button onclick="navigateTo('page-menu')" class="mt-4 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
                 ← Kembali ke Menu Simbol
             </button>
         </div>
@@ -140,41 +160,33 @@
         <div id="page-photo" class="page flex-col items-center text-center my-auto space-y-4 w-full">
             <h3 class="text-lg font-cute text-pink-500 font-bold">Memory Lane 📸</h3>
             
-            <!-- Photobox Strip Aesthetic Container -->
             <div class="w-full max-w-[260px] bg-white border border-gray-200 shadow-lg p-3 rounded-sm space-y-3 max-h-[340px] overflow-y-auto">
-                
-                <!-- Foto 1 (Ganti URL src dengan foto kamu/foto candid) -->
+                <!-- Foto 1 s/d 6 (Tinggal ganti URL gambarnya nanti) -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=1" alt="Foto 1" class="w-full h-full object-cover">
                 </div>
-                <!-- Foto 2 -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=2" alt="Foto 2" class="w-full h-full object-cover">
                 </div>
-                <!-- Foto 3 -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=3" alt="Foto 3" class="w-full h-full object-cover">
                 </div>
-                <!-- Foto 4 -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=4" alt="Foto 4" class="w-full h-full object-cover">
                 </div>
-                <!-- Foto 5 -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=5" alt="Foto 5" class="w-full h-full object-cover">
                 </div>
-                <!-- Foto 6 -->
                 <div class="bg-gray-100 aspect-[3/4] w-full overflow-hidden relative border border-gray-100">
                     <img src="https://picsum.photos/300/400?random=6" alt="Foto 6" class="w-full h-full object-cover">
                 </div>
                 
-                <!-- Footer ala-ala Polaroid/Photobox -->
                 <div class="text-center font-cute text-xs text-gray-400 pt-1 tracking-widest">
                     OUR MEMORIES ✨
                 </div>
             </div>
 
-            <button onclick="changePage('page-menu')" class="mt-2 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
+            <button onclick="navigateTo('page-menu')" class="mt-2 text-xs font-bold text-pink-400 hover:text-pink-600 transition-colors flex items-center cursor-pointer">
                 ← Kembali ke Menu Simbol
             </button>
         </div>
@@ -183,9 +195,27 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Fungsi untuk Mengubah Halaman (Sistem Navigasi Buku)
-        function changePage(pageId) {
-            // Sembunyikan semua halaman
+        // Kumpulan referensi audio
+        const audioTracks = {
+            'page-opener': document.getElementById('bg-main'),
+            'page-letter': document.getElementById('bg-letter'),
+            'page-gifts': document.getElementById('bg-gifts'),
+            'page-photo': document.getElementById('bg-photo')
+        };
+
+        // Fungsi mematikan semua track audio
+        function stopAllAudio() {
+            Object.values(audioTracks).forEach(track => {
+                if (track) {
+                    track.pause();
+                    track.currentTime = 0;
+                }
+            });
+        }
+
+        // Fungsi Navigasi Halaman Utama + Manajemen Audio Otomatis
+        function navigateTo(pageId) {
+            // Sembunyikan semua halaman aktif
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
             
@@ -194,61 +224,60 @@
             if (targetPage) {
                 targetPage.classList.add('active');
             }
-        }
 
-        // Fungsi Audio (Backsong)
-        const audio = document.getElementById('backsong');
-        const audioBtn = document.getElementById('audio-control-btn');
-
-        function playAudio() {
-            audio.play().catch(error => {
-                console.log("Autoplay diblokir browser, menunggu interaksi user.");
-            });
-        }
-
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.play();
-                audioBtn.innerText = "Playing";
-                audioBtn.classList.remove('text-gray-400');
-                audioBtn.classList.add('text-pink-500');
-            } else {
-                audio.pause();
-                audioBtn.innerText = "Paused";
-                audioBtn.classList.remove('text-pink-500');
-                audioBtn.classList.add('text-gray-400');
+            // Atur Alur Audio berdasarkan halaman
+            stopAllAudio();
+            if (audioTracks[pageId]) {
+                audioTracks[pageId].play().catch(err => {
+                    console.log("Interaksi awal dibutuhkan browser sebelum memutar musik.");
+                });
             }
         }
 
-        // Efek Hujan Emoji (Love & Bunga)
-        const emojis = ['🌸', '💖', '💗', '🌹', '✨', '💝'];
+        // Inisialisasi audio untuk halaman pembuka (jika diijinkan browser semenjak interaksi pertama)
+        window.addEventListener('click', function() {
+            const activePage = document.querySelector('.page.active');
+            if (activePage && audioTracks[activePage.id] && audioTracks[activePage.id].paused) {
+                audioTracks[activePage.id].play().catch(() => {});
+            }
+        }, { once: true });
+
+        // Fungsi Integrasi WhatsApp untuk Tombol Selesai
+        function redirectToWA() {
+            // Silakan ganti nomor di bawah ini dengan nomor tujuan kamu (gunakan format kode negara tanpa '+')
+            const nomorWA = "6281234567890"; 
+            const isiPesan = "terimakasihhh ya calonn suami akuu di masa yang akann datangggg🎉😘🥰😍🤩🥳😇😎🥵";
+            
+            const linkWA = `https://api.whatsapp.com/send?phone=${nomorWA}&text=${encodeURIComponent(isiPesan)}`;
+            window.open(linkWA, '_blank');
+        }
+
+        // Efek Hujan Emoji (Dibuat super gacor & melimpah)
+        const emojis = ['🌸', '💖', '💗', '🌹', '✨', '💝', '💐', '🌼', '💘'];
         const container = document.getElementById('emoji-container');
 
         function createEmoji() {
             const emojiEl = document.createElement('div');
             emojiEl.classList.add('emoji-fall');
             
-            // Pilih emoji acak
             emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             
-            // Atur posisi horizontal acak & ukuran acak
             emojiEl.style.left = Math.random() * 100 + 'vw';
-            emojiEl.style.fontSize = Math.random() * 20 + 15 + 'px';
+            emojiEl.style.fontSize = Math.random() * 25 + 12 + 'px';
             
-            // Atur durasi animasi acak agar alami (antara 3 - 6 detik)
-            const duration = Math.random() * 3 + 3;
+            // Durasi jatuh acak (antara 2.5 hingga 5 detik)
+            const duration = Math.random() * 2.5 + 2.5;
             emojiEl.style.animationDuration = duration + 's';
             
             container.appendChild(emojiEl);
             
-            // Hapus emoji jika animasi selesai agar tidak membebani memori browser
             setTimeout(() => {
                 emojiEl.remove();
             }, duration * 1000);
         }
 
-        // Jalankan efek hujan emoji secara berkala
-        setInterval(createEmoji, 300);
+        // Interval dipersingkat menjadi 80ms agar jatuhnya melimpah (gacor)
+        setInterval(createEmoji, 80);
     </script>
 </body>
 </html>
