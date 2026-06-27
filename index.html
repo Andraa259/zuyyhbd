@@ -295,7 +295,7 @@ function navigateTo(pageId) {
     if (currentTrack) {
         // CONTOH: Jika masuk ke halaman Letter, mulai dari menit ke 1:30 (90 detik)
         if (pageId === 'page-letter') {
-            currentTrack.currentTime = 90; // <-- Ganti angka ini dengan detik yang kamu mau (dalam satuan sekon)
+            currentTrack.currentTime = 128; // <-- Ganti angka ini dengan detik yang kamu mau (dalam satuan sekon)
             
             // Logika custom loop: Saat lagu habis, set kembali ke 0 (awal lagu) dan putar lagi
             currentTrack.onended = function() {
